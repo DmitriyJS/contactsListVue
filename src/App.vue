@@ -1,30 +1,55 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
-</template>
-
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+    <header-item>
+      <logo-icon></logo-icon> <span>CПИСОК КОНТАКТОВ</span>
+    </header-item>
+    <subheader-item @opened="setFormIsVisible" />
+    <table-item @chosen="1" />
+  
+    <form-item
+      @closed="formIsVisible = false"
+      v-if="formIsVisible"
+      :title="'Контакт'"
+    ></form-item>
+    <router-view />
+  </template>
+  
+  <script>
+  import TableItem from "@/components/UI/TableItem";
+  import LogoIcon from "@/components/icons/LogoIcon";
+  import HeaderItem from "./components/HeaderItem.vue";
+  import SubheaderItem from "./components/SubheaderItem.vue";
+  import FormItem from "./components/UI/FormItem.vue";
+  
+  import { mapActions } from "vuex";
+  
+  export default {
+    components: {
+      TableItem,
+      HeaderItem,
+      LogoIcon,
+      SubheaderItem,
+      FormItem,
+    },
+    data() {
+      return {
+        formIsVisible: false,
+      };
+    },
+    methods: {
+      setFormIsVisible(e) {
+        this.formIsVisible = true;
+        console.log(this.formIsVisible);
+      },
+    },
+    created() {
+      this.$store.dispatch("getContacts");
+    },
+  };
+  </script>
+  
+  <style lang="scss">
+  .container {
+    max-width: 990px;
+    margin: 0 auto;
   }
-}
-</style>
+  </style>  
