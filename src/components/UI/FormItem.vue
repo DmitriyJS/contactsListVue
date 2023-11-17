@@ -9,14 +9,14 @@
       <h1 class="form-title">{{ title }}</h1>
       <div class="form-items">
         <input-item
-          :rules="nameRules"
+          :rules="[rules.notEmpty, rules.tooShort]"
           :title="'Имя'"
           :placeholder="'Например «Андрей»...'"
           v-model="name"
           @onerror="errorHandler"
         />
         <input-item
-          :rules="phoneRules"
+          :rules="[rules.notEmpty, rules.isPhone]"
           :title="'Номер'"
           :placeholder="'+7(___)-___-__-__'"
           v-maska
@@ -25,13 +25,13 @@
           @onerror="errorHandler"
         />
         <input-item
-          :rules="emailRules"
+          :rules="[rules.notEmpty, rules.isEmail]"
           :title="'Email'"
           :placeholder="'Например «pochta@domain.ru»...'"
           v-model="email"
           @onerror="errorHandler"
         />
-        <select-item :wide="true" />
+        <select-item :wide="true" v-model="category" />
         <div class="label">
           <span class="input-title">Создан</span>
           <div class="form-date">{{ "12.12.1234" }}</div>
@@ -64,18 +64,17 @@ export default {
       name: "",
       email: "",
       phone: "",
-      category: "S",
+      category: "",
       isErr: false,
 
-      nameRules: [(val) => (val.length < 3 ? "Слишком короткое имя" : "")],
-      phoneRules: [
-        (val) =>
-          val.replace(/[^0-9]/g, "").length < 11 ? "Неверный номер" : "",
-      ],
-      emailRules: [
-        (val) =>
+      rules: {
+        notEmpty: (val) => (!!val ? "" : "Не может быть пустым"),
+        tooShort: (val) => ((val || "").length > 1 ? "" : "Мало символов"),
+        isPhone: (val) =>
+          val.replace(/[^0-9]/g, "").length > 10 ? "" : "Неверный номер",
+        isEmail: (val) =>
           !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) ? "Некорректный e-mail" : "",
-      ],
+      },
     };
   },
   methods: {
@@ -96,6 +95,9 @@ export default {
       };
 
       console.log(obj);
+    },
+    validate(){
+
     },
     errorHandler(e) {
       console.log(e, `asd`);

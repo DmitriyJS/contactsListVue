@@ -3,25 +3,21 @@
     <span class="select-title" v-if="wide">Категория</span>
     <div :class="['dropdown', { wide }]">
       <button class="dropdown__button" @click.prevent="dropDownBtnHandler">
-        <b v-if="selectedValue.toUpperCase() === 'ВСЕ'">{{ selectedValue }}</b>
+        <b v-if="selectedValue == 'Все'">{{ selectedValue }}</b>
         <div v-else>
           {{ selectedValue }}
         </div>
       </button>
       <ul v-if="listIsOpened" class="dropdown__list">
         <li
-          :style="{
-            pointerEvents: item == 'Все' && wide ? 'none' : 'all',
-          }"
           v-for="item in textItems"
-          @click.prevent="dropDownItemHandler"
+          @click="dropDownItemHandler(item)"
           :class="[
             'dropdown__list-item',
-            { selected: selectedValue.toLowerCase() === item.toLowerCase() },
+            { selected: selectedValue == item, disabled: item == 'Все' },
           ]"
           data-value="travel"
         >
-          <!-- <b v-if="item === 'Все'">{{ wide ? 'Не выбрано' : item }}</b> -->
           <div
             :style="{
               fontWeight: item === 'Все' && !wide ? 700 : 400,
@@ -33,14 +29,8 @@
           </div>
         </li>
       </ul>
-      <input
-        type="text"
-        name="select-category"
-        class="dropdown__input-hidden"
-        v-model="selectedValue"
-      />
     </div>
-    <span class="select-error" v-if="wide">Поле не можеть быть пустым</span>
+    <span class="select-error" v-if="wide">{{ error }}</span>
   </div>
 </template>
 
@@ -51,12 +41,22 @@ export default {
       type: Boolean,
       default: false,
     },
+    rules: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
+    modelValue: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
       listIsOpened: false,
       selectedValue: `${this.wide ? "НЕ ВЫБРАНО" : "ВСЕ"}`,
       textItems: ["Все", "Коллеги", "Родственники"],
+      error: "",
     };
   },
   methods: {
@@ -64,8 +64,15 @@ export default {
       this.listIsOpened = !this.listIsOpened;
     },
     dropDownItemHandler(e) {
-      this.selectedValue = e.target.innerText.toUpperCase();
+      this.error = "";
+      this.selectedValue = e;
       this.listIsOpened = false;
+      if (this.wide) {
+        this.$emit("update:modelValue", e);
+      }
+      if (!this.wide) {
+        this.$store.commit("setSortType", e);
+      }
     },
   },
 };
@@ -165,5 +172,8 @@ export default {
 
 .dropdown__input-hidden {
   display: none;
+}
+.disabled {
+  pointer-events: none;
 }
 </style>

@@ -3,11 +3,32 @@ import { createStore } from "vuex";
 export default createStore({
   state: {
     contacts: [],
+    sortType: "ВСЕ",
+    activeContact: {
+      name: "",
+      phone: "",
+      email: "",
+      createdAt: "",
+      category: "",
+    },
   },
-  getters: {},
+  getters: {
+    filteredContatcs(state) {
+      if (state.sortType.toLowerCase() === "все") return state.contacts;
+      return state.contacts.filter(
+        (el) => el.category.toLowerCase() === state.sortType.toLowerCase()
+      );
+    },
+  },
   mutations: {
     setContacts(state, list) {
       state.contacts = list;
+    },
+    setSortType(state, type) {
+      state.sortType = type;
+    },
+    setActiveContact(state, contact) {
+      state.activeContact = { ...contact };
     },
   },
   actions: {

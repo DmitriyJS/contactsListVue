@@ -11,18 +11,23 @@
           </div>
           <div class="table-head__date">СОЗДАН</div>
         </div>
-        <div class="table-row" v-for="n in 5">
-          <div class="table-row__name">
-            <div class="name-logo">Д</div>
-            Доставка Андрей Стоянов
+        <transition-group name="list" tag="div">
+          <div
+            class="table-row"
+            v-for="item in $store.getters.filteredContatcs"
+            @click="setActiveContact(item)"
+          >
+            <div class="table-row__name">
+              <div class="name-logo">{{ item.name[0] }}</div>
+              {{ item.name }}
+            </div>
+            <div class="wrapper">
+              <div class="table-row__phone">{{ item.phone }}</div>
+              <div class="table-row__email">{{ item.email }}</div>
+            </div>
+            <div class="table-row__date">{{ item.createdAt }}</div>
           </div>
-          <div class="wrapper">
-            <div class="table-row__phone">+7(987)654-78-10</div>
-            <div class="table-row__email">nelfeelingood1@gmail.com</div>
-          </div>
-
-          <div class="table-row__date">22.09.23</div>
-        </div>
+        </transition-group>
       </div>
     </div>
   </div>
@@ -32,6 +37,11 @@
 export default {
   data() {
     return {};
+  },
+  methods: {
+    setActiveContact(e) {
+      this.$store.commit("setActiveContact", e);
+    },
   },
   // components: { ButtonItem },
 };
@@ -119,6 +129,18 @@ export default {
   .wrapper {
     display: contents;
   }
+}
+
+.list-item {
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to /* .list-leave-active до версии 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
 }
 </style>
 <!-- EAF2FD -->
