@@ -10,7 +10,7 @@
       @focus="resetError"
       v-bind="$attrs"
     />
-    <transition name="slide-fade">
+    <transition name="icon-fade">
       <error-icon v-if="err.length" class="error-icon" />
     </transition>
     <span v-if="err.length" class="error">{{ err }}</span>
@@ -131,15 +131,10 @@ label {
 
 /* Анимации появления и исчезновения могут иметь */
 /* различные продолжительности и динамику.       */
-.slide-fade-enter-active {
-  transition: all 0.2s ease;
+.icon-fade-enter-active, .icon-fade-leave-active {
+  transition: opacity .5s;
 }
-.slide-fade-leave-active {
-  transition: all 0.4s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active до версии 2.1.8 */ {
-  transform: translateY(-110px);
+.icon-fade-enter, .icon-fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
   opacity: 0;
 }
 </style>
