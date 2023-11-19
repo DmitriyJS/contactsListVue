@@ -108,6 +108,11 @@ label {
       border-color: $error;
     }
 
+    &:focus {
+      border-color: $secondary;
+      /* background: red; */
+    }
+
     &::placeholder {
       color: $secondary-txt;
     }

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ContactsItem from "@/views/ContactsItem";
+import FormItem from "@/components/UI/FormItem";
 import ContactsList from "@/views/ContactsList";
 
 const routes = [
@@ -9,9 +9,9 @@ const routes = [
     component: ContactsList,
   },
   {
-    path: "/",
+    path: "/contact",
     name: "contact",
-    component: ContactsItem,
+    component: FormItem,
   },
 ];
 

@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       listIsOpened: false,
-      selectedValue: `${this.wide ? "НЕ ВЫБРАНО" : "ВСЕ"}`,
+      selectedValue: "",
       textItems: ["Все", "Коллеги", "Родственники"],
       error: "",
     };
@@ -74,6 +74,15 @@ export default {
         this.$store.commit("setSortType", e);
       }
     },
+  },
+
+  mounted() {
+    if (this.wide) {
+      this.selectedValue =
+        this.$store.state.activeContact.category || "НЕ ВЫБРАНО";
+    } else {
+      this.selectedValue = "ВСЕ";
+    }
   },
 };
 </script>

@@ -2,8 +2,14 @@
   <div class="form-wrapper">
     <header-item class="form-header">
       <button @click="$emit('closed')" class="close-btn">X</button>
-      <add-icon></add-icon>
-      Добавить контакт
+      <div v-if="!contact.name" class="add-contact">
+        <add-icon />
+        Добавить контакт
+      </div>
+      <div v-else class="header-contact__name">
+        <div class="header-contact__logo">{{ contact.name[0] }}</div>
+        {{ contact.name }}
+      </div>
     </header-item>
     <form @submit.prevent>
       <h1 class="form-title">{{ title }}</h1>
@@ -32,14 +38,16 @@
           @onerror="errorHandler"
         />
         <select-item :wide="true" v-model="category" />
-        <div class="label">
+        <div class="label" v-if="contact.createdAt">
           <span class="input-title">Создан</span>
-          <div class="form-date">{{ "12.12.1234" }}</div>
+          <div class="form-date">{{ contact.createdAt }}</div>
         </div>
       </div>
       <div class="buttons">
         <button-item @click="saveBtnHandler">Сохранить</button-item>
-        <button-item :transparent="true">Удалить</button-item>
+        <button-item v-if="contact.createdAt" :transparent="true"
+          >Удалить</button-item
+        >
       </div>
     </form>
   </div>
@@ -58,13 +66,23 @@ export default {
       type: String,
       default: "Контакт",
     },
+    contact: {
+      type: Object,
+      default: {
+        name: "",
+        email: "",
+        phone: "",
+        category: "",
+        createdAt: "",
+      },
+    },
   },
   data() {
     return {
-      name: "",
-      email: "",
-      phone: "",
-      category: "",
+      name: this.contact.name || "",
+      email: this.contact.email || "",
+      phone: this.contact.phone || "",
+      category: this.contact.category || "",
       isErr: false,
 
       rules: {
@@ -96,9 +114,7 @@ export default {
 
       console.log(obj);
     },
-    validate(){
-
-    },
+    validate() {},
     errorHandler(e) {
       console.log(e, `asd`);
       this.isErr = e;
@@ -185,6 +201,27 @@ export default {
     text-align: left;
     width: 408px;
     max-width: 408px;
+  }
+}
+.add-contact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-contact__name {
+  display: flex;
+  gap: 8px;
+  .header-contact__logo {
+    min-width: 24px;
+    height: 24px;
+    background: $primary;
+    border-radius: 50%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
   }
 }
 </style>

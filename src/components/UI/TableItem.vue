@@ -14,6 +14,7 @@
         <transition-group name="list" tag="div">
           <div
             class="table-row"
+            :key="item.id"
             v-for="item in $store.getters.filteredContatcs"
             @click="setActiveContact(item)"
           >
@@ -41,6 +42,7 @@ export default {
   methods: {
     setActiveContact(e) {
       this.$store.commit("setActiveContact", e);
+      this.$emit('chosen');
     },
   },
   // components: { ButtonItem },
